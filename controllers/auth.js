@@ -13,6 +13,7 @@ exports.signup = (req, res) => {
       error: errors.errors[0].msg,
     });
   }
+  
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) {
       return res.status(400).json({
