@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
     },
+    reset:{
+      type: Boolean,
+      default:false
+    },
     userinfo: {
       type: String,
       trim: true,
