@@ -69,6 +69,7 @@ exports.signup = (req, res) => {
 exports.verifyUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
+    console.log(user);
     if (!user) return res.status(400).send("Invalid link");
 
     const token = await Token.findOne({
@@ -78,10 +79,13 @@ exports.verifyUser = async (req, res) => {
 
     if (!token) return res.status(400).send("Invalid link");
 
-    await User.updateOne({ _id: user._id, verified: true });
+    // await User.updateOne({ _id: user._id, verified: true });
+    user.verified=true;
+    user.save();
     await Token.findByIdAndRemove(token._id);
     res.send("email verified sucessfully, you can signin now!");
   } catch (error) {
+    console.log(error);
     res.status(400).send("An error occured");
   }
 };
@@ -180,7 +184,9 @@ exports.verifyForgot = async (req, res) => {
 
     if (!token) return res.status(400).send("Invalid link");
 
-    await User.updateOne({ _id: user._id, reset: true });
+    // await User.updateOne({ _id: user._id, reset: true });
+    user.reset=true;
+    user.save();
     await Token.findByIdAndRemove(token._id);
     res.send("user verified sucessfully, you can reset your password now!");
   } catch (error) {
