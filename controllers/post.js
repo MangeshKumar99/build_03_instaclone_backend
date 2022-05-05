@@ -201,3 +201,13 @@ exports.getLikes = async (req, res) => {
     });
   }
 };
+
+exports.getPhoto = (req, res, next) => {
+  if (req.post.photo.data) {
+    res.set("Content-Type", req.post.photo.contentType);
+    return res.send(req.post.photo.data);
+  }
+  next();
+};
+
+
