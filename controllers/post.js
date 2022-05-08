@@ -54,20 +54,20 @@ exports.updatePost = (req, res) => {
           error: "Post not saved to DB",
         });
       }
-      return res.status(200).json(post);
+      return res.status(200).json({message:"Post updated successfully!"});
     });
   });
 };
 
 exports.deletePost = (req, res) => {
-  Product.findByIdAndRemove(req.post._id, (err, post) => {
+  Post.findByIdAndRemove(req.post._id, (err, post) => {
     if (err) {
       return res.status(400).json({
-        error: "Failed to delete the product",
+        error: "Failed to delete the post",
       });
     }
     return res.status(200).json({
-      message: `Product with ${req.post._id} successfully deleted`,
+      message: "Post successfully deleted",
     });
   });
 };
@@ -112,7 +112,7 @@ exports.createPost = (req, res) => {
           error: "Post not saved to DB",
         });
       }
-      return res.status(200).json(post);
+      return res.status(200).json({message:"Post created successfully!"});
     });
   });
 };
