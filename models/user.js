@@ -40,6 +40,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    postsCount: {
+      type:Number,
+      default:0
+    },
+    followers: {
+      type:Array,
+      default:[]
+    },
+    following: {
+      type:Array,
+      default:[]
+    },
     salt: String,
   },
   { timestamps: true }

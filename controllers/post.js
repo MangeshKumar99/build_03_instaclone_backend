@@ -148,14 +148,16 @@ exports.createComment = async (req, res) => {
 
 exports.deleteComment = async (req, res) => {
   try {
-    // You can use both req.product._id or req.params.postId
+    // You can use both req.post._id or req.params.postId
     const post = await Post.findOne({ _id: req.params.postId }); 
     const filteredCommentsArray = post.comments.filter(
       (item) => item._id !== req.params.commentId
     );
     post.comments = filteredCommentsArray;
     await post.save();
-    res.status(200).json(post);
+    res.status(200).json({
+      message:"Comment deleted successfully"
+    });
   } catch (error) {
     res.status(400).json({
       error: error,
@@ -209,5 +211,7 @@ exports.getPhoto = (req, res, next) => {
   }
   next();
 };
+
+
 
 
