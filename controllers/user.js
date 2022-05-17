@@ -49,7 +49,7 @@ exports.decrementPostCount = async(req, res, next) => {
 exports.updateFollow = async(req,res) =>{
   try {
     //user1 which is following
-    const user1 = await User.findOne({ _id: req.params.userId1 });
+    const user1 = await User.findOne({ _id: req.params.userId });
     //user2 which is followed
     const user2 = await User.findOne({ _id: req.params.userId2 });
 
