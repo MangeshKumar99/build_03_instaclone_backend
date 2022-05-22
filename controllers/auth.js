@@ -241,3 +241,6 @@ exports.isAuthenticated = (req, res, next) => {
   }
   next();
 };
+exports.checkUser = (req,res) =>{
+  res.status(200).json({message:"Authenticated User"});
+}
