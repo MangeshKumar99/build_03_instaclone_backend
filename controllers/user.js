@@ -16,7 +16,7 @@ exports.getAUser = async(req,res) => {
     const user = await User.findOne({_id:req.profile._id});
     res.status(200).json(user);
   } catch (error) {
-    res.json({error:error});
+    res.status(400).json({error:error});
   }
 }
 
@@ -68,6 +68,16 @@ exports.updateFollow = async(req,res) =>{
     await user2.save();
     res.status(200).json({message:"Successfully updated"})
 
+  } catch (error) {
+    res.status(400).json({error:error});
+  }
+}
+
+exports.searchUsers = async(req,res) => {
+  try {
+    const users = await User.find({});
+    const filteredUsers = users.filter(user => user.name.startsWith(req.params.name));
+    res.status(200).json(filteredUsers);
   } catch (error) {
     res.status(400).json({error:error});
   }
