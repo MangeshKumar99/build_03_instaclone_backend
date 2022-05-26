@@ -76,7 +76,7 @@ exports.updateFollow = async(req,res) =>{
 exports.searchUsers = async(req,res) => {
   try {
     const users = await User.find({});
-    const filteredUsers = users.filter(user => user.name.startsWith(req.params.name));
+    const filteredUsers = users.filter(user => user.name.toLowerCase().startsWith(req.params.name.toLowerCase()));
     res.status(200).json(filteredUsers);
   } catch (error) {
     res.status(400).json({error:error});
