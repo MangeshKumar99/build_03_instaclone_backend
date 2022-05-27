@@ -125,9 +125,17 @@ exports.getAllPosts = (req, res) => {
       if (err) {
         return res.json({ error: err });
       }
+      result=excludePassword(result);
       res.json({ result: result });
     });
 };
+
+excludePassword = (result) =>{
+  for(let i=0;i<result.length;i++){
+    result[i].postedBy.encry_password = undefined;
+  }
+  return result;
+}
 
 exports.createComment = async (req, res) => {
   try {

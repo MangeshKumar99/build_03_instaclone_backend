@@ -14,6 +14,7 @@ exports.getUserById = (req, res, next, id) => {
 exports.getAUser = async(req,res) => {
   try {
     const user = await User.findOne({_id:req.profile._id});
+    user.encry_password = undefined;
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({error:error});
