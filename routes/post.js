@@ -17,7 +17,7 @@ router.get("/comment/delete/:commentId/:postId/:userId", isSignedIn, isAuthentic
 router.post("/comment/update/:commentId/:postId/:userId", isSignedIn, isAuthenticated ,updateComment);
 router.get("/post/like/:postId/:userId",isSignedIn, isAuthenticated ,getLikes);
 
-router.get("/posts", isSignedIn, isAuthenticated, getAllPosts);
+router.get("/posts/:userId", isSignedIn, isAuthenticated, getAllPosts);
 
 
 
