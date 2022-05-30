@@ -34,6 +34,7 @@ exports.incrementPostCount = async(req, res, next) => {
   }
 }
 
+
 exports.decrementPostCount = async(req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.profile._id });
