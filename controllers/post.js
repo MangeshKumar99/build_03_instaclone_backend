@@ -3,6 +3,13 @@ const formidable = require("formidable");
 const fs = require("fs");
 const _ = require("lodash");
 const { v1: uuidv1 } = require("uuid");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({ 
+  cloud_name: process.env.cloud_name, 
+  api_key: process.env.api_key, 
+  api_secret: process.env.api_secret,
+  secure: true
+});
 
 exports.getPostById = (req, res, next, id) => {
   Post.findById(id).exec((err, post) => {
@@ -25,37 +32,36 @@ exports.updatePost = (req, res) => {
         error: "Problem with image",
       });
     }
-    //destructure the fields
-    const { title, description } = fields;
-    if (!title || !description) {
-      return res.status(400).json({
-        message: "Please include all the fields..",
-      });
-    }
     let post = req.post;
     post = _.extend(post, fields);
-
-    //Handle file here
-    if (file.photo) {
-      if (file.photo.size > 3000000) {
-        return res.status(400).json({
-          error: "File size too big!",
+    cloudinary.uploader.upload(file.photo.path, (error,result)=>{
+      if(error){
+        return res.status(400).json({error:error})
+      }
+      else{
+        const {url} = result;
+        if (file.photo) {
+          if (file.photo.size > 3000000) {
+            return res.status(400).json({
+              error: "File size too big!",
+            });
+          }
+        }
+        if (req.profile) {
+          post.postedBy = req.profile;
+        }
+        post.photo = url;
+        post.save((err, post) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Post not saved to DB",
+            });
+          }
+          return res.status(200).json({message:"Post updated successfully!"});
         });
       }
-      // Include our file into product
-      post.photo.data = fs.readFileSync(file.photo.path);
-      post.photo.contentType = file.photo.type;
-    }
-    // Save to DB
-
-    post.save((err, post) => {
-      if (err) {
-        return res.status(400).json({
-          error: "Post not saved to DB",
-        });
-      }
-      return res.status(200).json({message:"Post updated successfully!"});
-    });
+    })
+   
   });
 };
 
@@ -81,39 +87,34 @@ exports.createPost = (req, res) => {
         error: "Problem with image",
       });
     }
-    //destructure the fields
-
-    const { title, description } = fields;
-    if (!title || !description) {
-      return res.status(400).json({
-        message: "Please include all the fields..",
-      });
-    }
-    let post = new Post(fields);
-    //Handle file here
-    if (file.photo) {
-      if (file.photo.size > 3000000) {
-        return res.status(400).json({
-          error: "File size too big!",
+    cloudinary.uploader.upload(file.photo.path, (error,result)=>{
+      if(error){
+        return res.status(400).json({error:error})
+      }
+      else{
+        const {url} = result;
+        const post = new Post(fields);
+        if (file.photo) {
+          if (file.photo.size > 3000000) {
+            return res.status(400).json({
+              error: "File size too big!",
+            });
+          }
+        }
+        if (req.profile) {
+          post.postedBy = req.profile;
+        }
+        post.photo = url;
+        post.save((err, post) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Post not saved to DB",
+            });
+          }
+          return res.status(200).json({message:"Post created successfully!"});
         });
       }
-      // Include our file into product
-      post.photo.data = fs.readFileSync(file.photo.path);
-      post.photo.contentType = file.photo.type;
-    }
-    if (req.profile) {
-      post.postedBy = req.profile;
-    }
-    // Save to DB
-
-    post.save((err, post) => {
-      if (err) {
-        return res.status(400).json({
-          error: "Post not saved to DB",
-        });
-      }
-      return res.status(200).json({message:"Post created successfully!"});
-    });
+    })
   });
 };
 

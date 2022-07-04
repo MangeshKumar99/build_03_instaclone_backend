@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
@@ -11,6 +12,7 @@ const postRoutes = require("./routes/post")
 
 const app = express();
 const port = process.env.PORT || 1313;
+
 mongoose
   .connect(process.env.DATABASE, {
     useNewUrlParser: true,
