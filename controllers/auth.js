@@ -172,8 +172,10 @@ exports.forgot = (req, res) => {
 };
 
 exports.verifyForgot = async (req, res) => {
+  console.log("hello");
   try {
     const user = await User.findOne({ _id: req.params.id });
+    console.log(user);
     if (!user) return res.status(400).send("Invalid link");
 
     const token = await Token.findOne({
