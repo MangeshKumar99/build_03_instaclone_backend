@@ -11,6 +11,24 @@ const userRoutes = require("./routes/user");
 const postRoutes = require("./routes/post")
 
 const app = express();
+
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+      origins: "*"
+  }
+});
+io.on('connection',(socket) => {
+  console.log('A user connected...');
+  socket.on('chat', (payload) => {
+    // console.log(payload);
+    io.emit('chat', payload);
+  })
+  socket.on('disconnect', function () {
+    console.log('A user disconnected...');
+ });
+
+})
 const port = process.env.PORT || 1313;
 
 mongoose
@@ -31,7 +49,9 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", postRoutes);
 
-app.listen(port, () => {
-    console.log(`app running on ${port}`);
-  });
-  
+// app.listen(port, () => {
+//     console.log(`app running on ${port}`);
+//   });
+server.listen(port, () => {
+  console.log(`server running on ${port}`)
+})
