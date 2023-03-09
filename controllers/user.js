@@ -20,6 +20,15 @@ exports.getAUser = async(req,res) => {
     res.status(400).json({error:error});
   }
 }
+exports.getAllUsers = async(req,res) => {
+  try {
+    const user = await User.find();
+    user.encry_password = undefined;
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({error:error});
+  }
+}
 
 exports.incrementPostCount = async(req, res, next) => {
   try {
