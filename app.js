@@ -21,6 +21,13 @@ const io = require('socket.io')(server, {
 io.on('connection',(socket) => {
   console.log("A user connected...")
 
+  socket.on('create', function(room) {
+    socket.join(room);
+    socket.on("chat", (payload) => {
+      io.in(room).emit("chat",payload);
+    });
+  });
+  
   // socket.on("join", (data) => {
   //   socket.broadcast.to(data.room).emit("user joined");
   // });
@@ -29,9 +36,9 @@ io.on('connection',(socket) => {
   //   io.in(payload.room).emit("chat",payload);
   // });
 
-  socket.on('chat', (payload) => {
-    io.emit('chat', payload);
-  })
+  // socket.on('chat', (payload) => {
+  //   io.emit('chat', payload);
+  // })
   socket.on('disconnect', function () {
     console.log('A user disconnected...');
  });
