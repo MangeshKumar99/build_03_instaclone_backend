@@ -8,42 +8,43 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
-const postRoutes = require("./routes/post")
+const postRoutes = require("./routes/post");
 
 const app = express();
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server, {
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
   cors: {
-      origins: "*"
-  }
+    origins: "*",
+  },
 });
-io.on('connection',(socket) => {
-  console.log("A user connected...")
-
-  socket.on('create', function(room) {
+io.on("connection", (socket) => {
+  console.log("A user connected...");
+  socket.on("create", function (room) {
     socket.join(room);
     socket.on("chat", (payload) => {
-      io.in(room).emit("chat",payload);
+      io.in(room).emit("chat", payload);
     });
   });
-  
-  // socket.on("join", (data) => {
-  //   socket.broadcast.to(data.room).emit("user joined");
-  // });
 
-  // socket.on("chat", (payload) => {
-  //   io.in(payload.room).emit("chat",payload);
-  // });
+  socket.on("join or left", (notification) => {
+    console.log(notification);
+    io.emit("join or left", notification);
+  });
 
-  // socket.on('chat', (payload) => {
-  //   io.emit('chat', payload);
-  // })
-  socket.on('disconnect', function () {
-    console.log('A user disconnected...');
- });
+  socket.on("disconnect", function () {
+    console.log("A user disconnected...");
+  });
 
-})
+  socket.on("destroy", (room) => {
+    socket.leave(room);
+  });
+
+  socket.on("typing", (payload) => {
+    io.in(payload.room).emit("typing", payload.message);
+  });
+
+});
 const port = process.env.PORT || 1313;
 
 mongoose
@@ -68,5 +69,5 @@ app.use("/api", postRoutes);
 //     console.log(`app running on ${port}`);
 //   });
 server.listen(port, () => {
-  console.log(`server running on ${port}`)
-})
+  console.log(`server running on ${port}`);
+});
