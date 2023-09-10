@@ -9,6 +9,7 @@ require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const postRoutes = require("./routes/post");
+const chatRoutes = require("./routes/chat");
 
 const app = express();
 
@@ -28,7 +29,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join or left", (notification) => {
-    console.log(notification);
     io.emit("join or left", notification);
   });
 
@@ -64,6 +64,7 @@ app.use(cookieParser());
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", postRoutes);
+app.use("/api", chatRoutes);
 
 // app.listen(port, () => {
 //     console.log(`app running on ${port}`);
